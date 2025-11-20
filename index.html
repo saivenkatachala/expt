@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel ="icon" href="icon.png" type="png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <style>
+    /* CSS Variables for consistent theming */
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --secondary: #3f37c9;
+      --success: #4cc9f0;
+      --danger: #f72585;
+      --warning: #f8961e;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --gray-light: #e9ecef;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    /* Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      color: var(--dark);
+      background-color: #f5f7fb;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    a:hover {
+      color: var(--secondary);
+    }
+
+    /* Layout Components */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      user-select: none;
+      border: 1px solid transparent;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      color: white;
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--secondary);
+      border-color: var(--secondary);
+    }
+
+    .btn-danger {
+      color: white;
+      background-color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background-color: #d11450;
+      border-color: #d11450;
+    }
+
+    .btn-small {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    /* Navigation */
+    .navbar {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .navbar-nav {
+      display: flex;
+      list-style: none;
+    }
+
+    .navbar-nav li {
+      margin-left: 1.5rem;
+    }
+
+    .navbar-nav a {
+      color: var(--dark);
+      font-weight: 500;
+    }
+
+    .navbar-nav a:hover {
+      color: var(--primary);
+    }
+
+    .navbar-nav .danger {
+      color: var(--danger);
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
+    }
+
+    /* Auth Pages */
+    .auth-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f5f7fb 0%, #e4edf5 100%);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 400px;
+      padding: 2rem;
+    }
+
+    /* Dashboard */
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .summary-card {
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    .summary-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+
+    .summary-card.primary {
+      background-color: rgba(67, 97, 238, 0.1);
+      border-left: 4px solid var(--primary);
+    }
+
+    .summary-card.success {
+      background-color: rgba(76, 201, 240, 0.1);
+      border-left: 4px solid var(--success);
+    }
+
+    .summary-card.danger {
+      background-color: rgba(247, 37, 133, 0.1);
+      border-left: 4px solid var(--danger);
+    }
+
+    /* Tables */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-light);
+    }
+
+    .table th {
+      background-color: rgba(0, 0, 0, 0.02);
+      font-weight: 600;
+    }
+
+    /* Cards for mobile view */
+    .card-list {
+      display: none;
+    }
+
+    .entry-card {
+      padding: 1rem;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+    }
+
+    .entry-card .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .entry-card .amount {
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .card-actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Messages */
+    .message {
+      padding: 0.75rem;
+      border-radius: var(--border-radius);
+      margin-top: 1rem;
+    }
+
+    .message.success {
+      background-color: rgba(76, 201, 240, 0.1);
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .message.error {
+      background-color: rgba(247, 37, 133, 0.1);
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    /* Utilities */
+    .text-muted {
+      color: var(--gray);
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .d-none {
+      display: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar-container {
+        flex-direction: column;
+      }
+      
+      .navbar-nav {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .navbar-nav li {
+        margin: 0.25rem 0.5rem;
+      }
+      
+      .table-responsive {
+        display: none;
+      }
+      
+      .card-list {
+        display: block;
+      }
+      
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container navbar-container">
+      <div class="navbar-brand">Expense Tracker</div>
+      <ul class="navbar-nav">
+        <li><a href="#" id="dashboard-link">Dashboard</a></li>
+        <li><a href="#" id="add-expense-link">Add Expense</a></li>
+        <li><a href="#" id="track-expense-link">Track Expense</a></li>
+        <li><a href="#" id="download-bills-link">Download Bills</a></li>
+        <li><a href="#" id="logout-link" class="danger">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="container" id="main-content">
+    <!-- Dashboard View -->
+    <section id="dashboard-view" class="d-none">
+      <div class="welcome-section card">
+        <h1>Welcome, <span id="user-name">User</span></h1>
+        <p class="text-muted">Use the navigation to add, view, and download expense reports.</p>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card primary">
+          <h3>Available Amount</h3>
+          <div class="value" id="available-amount">₹0</div>
+        </div>
+        <div class="summary-card success">
+          <h3>Total Credits</h3>
+          <div class="value" id="total-credits">₹0</div>
+        </div>
+        <div class="summary-card danger">
+          <h3>Total Debits</h3>
+          <div class="value" id="total-debits">₹0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Add Expense View -->
+    <section id="add-expense-view" class="d-none">
+      <div class="card">
+        <h2>Add Entry</h2>
+        <form id="expense-form">
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" required min="0.01" step="0.01">
+          </div>
+          
+          <div class="form-group">
+            <label for="paid-type">Paid Type</label>
+            <select id="paid-type" required>
+              <option value="">Select</option>
+              <option value="Paid To">Paid To</option>
+              <option value="Paid By">Paid By</option>
+            </select>
+          </div>
+          
+          <div class="form-group d-none" id="other-name-group">
+            <label for="other-name">Name</label>
+            <input type="text" id="other-name">
+          </div>
+          
+          <div class="form-group">
+            <label for="reason">Reason</label>
+            <input type="text" id="reason" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="type">Type</label>
+            <select id="type" required>
+              <option value="Credit">Credit</option>
+              <option value="Debit">Debit</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <div id="add-expense-message" class="message"></div>
+      </div>
+    </section>
+
+    <!-- Track Expense View -->
+    <section id="track-expense-view" class="d-none">
+      <div class="card">
+        <h2>Your Entries</h2>
+        <p class="text-muted" id="available-amount-text">Available Amount: ₹0</p>
+        
+        <!-- Desktop Table View -->
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Paid</th>
+                <th>Reason</th>
+                <th>Type</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="entries-table-body">
+              <!-- Entries will be populated here -->
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Mobile Card View -->
+        <div class="card-list" id="entries-card-list">
+          <!-- Entries will be populated here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Download Bills View -->
+    <section id="download-bills-view" class="d-none">
+      <div class="card">
+        <h2>Download Monthly PDF</h2>
+        
+        <div class="form-group">
+          <label for="month">Month</label>
+          <select id="month">
+            <option value="">--Select--</option>
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="year">Year</label>
+          <select id="year">
+            <!-- Years will be populated by JavaScript -->
+          </select>
+        </div>
+        
+        <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+          <button id="download-btn" class="btn btn-primary">Generate & Download PDF</button>
+          <button id="email-btn" class="btn btn-primary">Send PDF by Email Now</button>
+        </div>
+        
+        <div id="download-message" class="message"></div>
+      </div>
+    </section>
+
+    <!-- Login View -->
+    <section id="login-view" class="auth-container">
+      <div class="card auth-card">
+        <h2 class="text-center">Login</h2>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-phone">Phone Number</label>
+            <input type="tel" id="login-phone" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required>
+          </div>
+          
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+          
+          <p class="text-center text-muted" style="margin-top: 1rem;">
+            New user? <a href="#" id="register-link">Register</a>
+          </p>
+        </form>
+        <div id="login-message" class="message"></div>
+      </div>
+    </section>
+
+    <!-- Register View -->
+    <section id="register-view" class="auth-container d-none">
+      <div class="card auth-card">
+        <h2 class="text-center">Register</h2>
+        <form id="register-form">
+          <div class="form-group">
+            <label for="register-name">Name</label>
+            <input type="text" id="register-name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="register-phone">Phone Number</label>
+            <input type="tel" id="register-phone" required pattern="[0-9]{10}" placeholder="10 digits">
+          </div>
+          
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" required minlength="6">
+          </div>
+          
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+          
+          <p class="text-center text-muted" style="margin-top: 1rem;">
+            Already have an account? <a href="#" id="login-link">Login</a>
+          </p>
+        </form>
+        <div id="register-message" class="message"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // API Configuration
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwQmc1SBLQiVxSeVd09ad467rx6Oq1fjUJyaRGt2SDX0XYrl9Xgo5wQae8cS_EkBXH2/exec';
+
+    // Utility API POST wrapper
+    async function apiPost(data) {
+      const body = new URLSearchParams();
+      Object.keys(data).forEach(k => body.append(k, typeof data[k] === 'object' ? JSON.stringify(data[k]) : data[k]));
+      const res = await fetch(API_URL, { method: 'POST', body });
+      if (!res.ok) throw new Error('Network response not ok');
+      return res.json();
+    }
+
+    // Application State
+    let currentUser = null;
+    let currentView = 'login';
+
+    // DOM Elements
+    const views = {
+      'dashboard': document.getElementById('dashboard-view'),
+      'add-expense': document.getElementById('add-expense-view'),
+      'track-expense': document.getElementById('track-expense-view'),
+      'download-bills': document.getElementById('download-bills-view'),
+      'login': document.getElementById('login-view'),
+      'register': document.getElementById('register-view')
+    };
+
+    // Navigation Elements
+    const navLinks = {
+      'dashboard': document.getElementById('dashboard-link'),
+      'add-expense': document.getElementById('add-expense-link'),
+      'track-expense': document.getElementById('track-expense-link'),
+      'download-bills': document.getElementById('download-bills-link'),
+      'logout': document.getElementById('logout-link'),
+      'register': document.getElementById('register-link'),
+      'login': document.getElementById('login-link')
+    };
+
+    // Initialize the application
+    function initApp() {
+      // Check if user is logged in
+      const userPhone = localStorage.getItem('userPhone');
+      const userName = localStorage.getItem('userName');
+      
+      if (userPhone) {
+        currentUser = { phone: userPhone, name: userName };
+        showView('dashboard');
+        loadDashboardSummary();
+      } else {
+        showView('login');
+      }
+      
+      // Set up navigation event listeners
+      setupNavigation();
+      
+      // Set up form event listeners
+      setupForms();
+      
+      // Populate year dropdown for download bills
+      populateYearDropdown();
+    }
+
+    // Show a specific view and hide others
+    function showView(viewName) {
+      // Hide all views
+      Object.values(views).forEach(view => {
+        view.classList.add('d-none');
+      });
+      
+      // Show the requested view
+      views[viewName].classList.remove('d-none');
+      currentView = viewName;
+      
+      // Update navigation visibility
+      const isAuthenticated = currentUser !== null;
+      const navItems = document.querySelectorAll('.navbar-nav li');
+      
+      if (isAuthenticated) {
+        navItems.forEach(item => item.style.display = 'list-item');
+        document.getElementById('user-name').textContent = currentUser.name || currentUser.phone;
+      } else {
+        navItems.forEach(item => item.style.display = 'none');
+      }
+    }
+
+    // Set up navigation event listeners
+    function setupNavigation() {
+      navLinks.dashboard.addEventListener('click', (e) => {
+        e.preventDefault();
+        showView('dashboard');
+        loadDashboardSummary();
+      });
+      
+      navLinks['add-expense'].addEventListener('click', (e) => {
+        e.preventDefault();
+        showView('add-expense');
+      });
+      
+      navLinks['track-expense'].addEventListener('click', (e) => {
+        e.preventDefault();
+        showView('track-expense');
+        loadEntries();
+      });
+      
+      navLinks['download-bills'].addEventListener('click', (e) => {
+        e.preventDefault();
+        showView('download-bills');
+      });
+      
+      navLinks.logout.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.clear();
+        currentUser = null;
+        showView('login');
+      });
+      
+      navLinks.register.addEventListener('click', (e) => {
+        e.preventDefault();
+        showView('register');
+      });
+      
+      navLinks.login.addEventListener('click', (e) => {
+        e.preventDefault();
+        showView('login');
+      });
+    }
+
+    // Set up form event listeners
+    function setupForms() {
+      // Login form
+      document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const phone = document.getElementById('login-phone').value.trim();
+        const password = document.getElementById('login-password').value;
+        const messageEl = document.getElementById('login-message');
+        
+        messageEl.textContent = '';
+        messageEl.className = 'message';
+        
+        try {
+          const res = await apiPost({ action: 'login', phone, password });
+          if (res.success) {
+            localStorage.setItem('userPhone', phone);
+            localStorage.setItem('userName', res.name || '');
+            currentUser = { phone, name: res.name || '' };
+            showView('dashboard');
+            loadDashboardSummary();
+          } else {
+            messageEl.textContent = res.error || 'Invalid credentials';
+            messageEl.className = 'message error';
+          }
+        } catch (err) {
+          messageEl.textContent = 'Network or server error';
+          messageEl.className = 'message error';
+        }
+      });
+      
+      // Register form
+      document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('register-name').value.trim();
+        const phone = document.getElementById('register-phone').value.trim();
+        const email = document.getElementById('register-email').value.trim();
+        const password = document.getElementById('register-password').value;
+        const messageEl = document.getElementById('register-message');
+        
+        messageEl.textContent = '';
+        messageEl.className = 'message';
+        
+        if (!phone || !email) {
+          messageEl.textContent = 'Phone and Email are required';
+          messageEl.className = 'message error';
+          return;
+        }
+        
+        try {
+          const res = await apiPost({ action: 'register', name, phone, email, password });
+          if (res.success) {
+            localStorage.setItem('userPhone', phone);
+            localStorage.setItem('userName', name);
+            currentUser = { phone, name };
+            showView('dashboard');
+            loadDashboardSummary();
+          } else {
+            messageEl.textContent = res.error || 'Registration failed';
+            messageEl.className = 'message error';
+          }
+        } catch (err) {
+          messageEl.textContent = 'Network or server error';
+          messageEl.className = 'message error';
+        }
+      });
+      
+      // Add expense form
+      document.getElementById('expense-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const phone = localStorage.getItem('userPhone');
+        const payload = {
+          action: 'addEntry',
+          phone,
+          date: document.getElementById('date').value,
+          amount: parseFloat(document.getElementById('amount').value),
+          paidType: document.getElementById('paid-type').value,
+          otherName: document.getElementById('other-name').value || '',
+          reason: document.getElementById('reason').value,
+          type: document.getElementById('type').value
+        };
+        
+        const messageEl = document.getElementById('add-expense-message');
+        messageEl.textContent = '';
+        messageEl.className = 'message';
+        
+        try {
+          const res = await apiPost(payload);
+          if (res.success) {
+            messageEl.textContent = 'Entry added successfully';
+            messageEl.className = 'message success';
+            document.getElementById('expense-form').reset();
+            document.getElementById('other-name-group').classList.add('d-none');
+          } else {
+            messageEl.textContent = res.error || 'Error adding entry';
+            messageEl.className = 'message error';
+          }
+        } catch (err) {
+          messageEl.textContent = 'Network error';
+          messageEl.className = 'message error';
+        }
+      });
+      
+      // Paid type change handler
+      document.getElementById('paid-type').addEventListener('change', () => {
+        const paidType = document.getElementById('paid-type').value;
+        const otherNameGroup = document.getElementById('other-name-group');
+        
+        if (paidType) {
+          otherNameGroup.classList.remove('d-none');
+        } else {
+          otherNameGroup.classList.add('d-none');
+        }
+      });
+      
+      // Download PDF button
+      document.getElementById('download-btn').addEventListener('click', async () => {
+        const month = document.getElementById('month').value;
+        const year = document.getElementById('year').value;
+        const messageEl = document.getElementById('download-message');
+        
+        if (!month || !year) {
+          alert('Please select month and year');
+          return;
+        }
+        
+        const phone = localStorage.getItem('userPhone');
+        const res = await apiPost({ action: 'generatePDF', phone, month, year, inline: 'false' });
+        
+        if (res.success && res.url) {
+          window.open(res.url, '_blank');
+        } else {
+          messageEl.textContent = res.error || 'Failed to generate PDF';
+          messageEl.className = 'message error';
+        }
+      });
+      
+      // Email PDF button
+      document.getElementById('email-btn').addEventListener('click', async () => {
+        const month = document.getElementById('month').value;
+        const year = document.getElementById('year').value;
+        const messageEl = document.getElementById('download-message');
+        
+        if (!month || !year) {
+          alert('Please select month and year');
+          return;
+        }
+        
+        const phone = localStorage.getItem('userPhone');
+        const res = await apiPost({ action: 'emailReportNow', phone, month, year });
+        
+        if (res.success) {
+          messageEl.textContent = 'Email sent successfully';
+          messageEl.className = 'message success';
+        } else {
+          messageEl.textContent = res.error || 'Error sending email';
+          messageEl.className = 'message error';
+        }
+      });
+    }
+
+    // Load dashboard summary
+    async function loadDashboardSummary() {
+      try {
+        const res = await apiPost({ action: 'getSummary', phone: currentUser.phone });
+        if (res.success) {
+          document.getElementById('available-amount').textContent = '₹' + res.available.toFixed(2);
+          document.getElementById('total-credits').textContent = '₹' + res.credits.toFixed(2);
+          document.getElementById('total-debits').textContent = '₹' + res.debits.toFixed(2);
+        }
+      } catch (e) {
+        console.error('Error loading dashboard summary:', e);
+      }
+    }
+
+    // Load entries for track expense view
+    async function loadEntries() {
+      const phone = localStorage.getItem('userPhone');
+      const res = await apiPost({ action: 'getEntries', phone });
+      
+      if (!res.success) return;
+      
+      const entries = res.entries || [];
+      
+      // Compute sums
+      let credits = 0, debits = 0;
+      entries.forEach(e => {
+        if (e.Type === 'Credit') credits += Number(e.Amount || 0);
+        else debits += Number(e.Amount || 0);
+      });
+      
+      document.getElementById('available-amount-text').textContent = 
+        'Available Amount: ₹' + (credits - debits).toFixed(2);
+      
+      // Desktop table view
+      const tableBody = document.getElementById('entries-table-body');
+      tableBody.innerHTML = '';
+      
+      entries.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${e.Date || ''}</td>
+          <td>₹${parseFloat(e.Amount || 0).toFixed(2)}</td>
+          <td>${e.PaidType} ${e.Name ? ('- ' + e.Name) : ''}</td>
+          <td>${e.Reason || ''}</td>
+          <td>${e.Type || ''}</td>
+          <td>
+            <button class="btn btn-primary btn-small edit-entry" data-id="${e.Id}">Edit</button>
+            <button class="btn btn-danger btn-small delete-entry" data-id="${e.Id}">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+      
+      // Mobile card view
+      const cardList = document.getElementById('entries-card-list');
+      cardList.innerHTML = '';
+      
+      entries.forEach(e => {
+        const card = document.createElement('div');
+        card.className = 'entry-card';
+        card.innerHTML = `
+          <div class="row">
+            <div><strong>${e.Date}</strong></div>
+            <div class="amount">₹${parseFloat(e.Amount || 0).toFixed(2)}</div>
+          </div>
+          <div class="text-muted">${e.PaidType} ${e.Name ? ('- ' + e.Name) : ''}</div>
+          <div>${e.Reason}</div>
+          <div class="card-actions">
+            <button class="btn btn-primary btn-small edit-entry" data-id="${e.Id}">Edit</button>
+            <button class="btn btn-danger btn-small delete-entry" data-id="${e.Id}">Delete</button>
+          </div>
+        `;
+        cardList.appendChild(card);
+      });
+      
+      // Add event listeners to edit and delete buttons
+      document.querySelectorAll('.edit-entry').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          const entry = entries.find(x => x.Id === id);
+          if (!entry) return alert('Entry not found');
+          
+          const newDate = prompt('Date', entry.Date) || entry.Date;
+          const newAmount = prompt('Amount', entry.Amount) || entry.Amount;
+          const newReason = prompt('Reason', entry.Reason) || entry.Reason;
+          const newType = prompt('Type (Credit/Debit)', entry.Type) || entry.Type;
+          const newPaidType = prompt('Paid Type (Paid To/Paid By)', entry.PaidType) || entry.PaidType;
+          const newName = prompt('Name (if any)', entry.Name || '') || entry.Name || '';
+          
+          editEntry(id, newDate, newAmount, newReason, newType, newPaidType, newName);
+        });
+      });
+      
+      document.querySelectorAll('.delete-entry').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          if (confirm('Are you sure you want to delete this entry?')) {
+            deleteEntry(id);
+          }
+        });
+      });
+    }
+
+    // Edit an entry
+    async function editEntry(id, date, amount, reason, type, paidType, name) {
+      const phone = localStorage.getItem('userPhone');
+      const res = await apiPost({
+        action: 'editEntry',
+        phone,
+        id,
+        Date: date,
+        Amount: amount,
+        Reason: reason,
+        Type: type,
+        PaidType: paidType,
+        Name: name
+      });
+      
+      if (res.success) {
+        loadEntries();
+      } else {
+        alert(res.error || 'Error editing entry');
+      }
+    }
+
+    // Delete an entry
+    async function deleteEntry(id) {
+      const phone = localStorage.getItem('userPhone');
+      const res = await apiPost({ action: 'deleteEntry', phone, id });
+      
+      if (res.success) {
+        loadEntries();
+      } else {
+        alert(res.error || 'Error deleting entry');
+      }
+    }
+
+    // Populate year dropdown for download bills
+    function populateYearDropdown() {
+      const yearSelect = document.getElementById('year');
+      const currentYear = new Date().getFullYear();
+      
+      for (let y = currentYear; y >= currentYear - 5; y--) {
+        const option = document.createElement('option');
+        option.value = y;
+        option.textContent = y;
+        yearSelect.appendChild(option);
+      }
+    }
+
+    // Initialize the application when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
