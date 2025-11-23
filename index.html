@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel ="icon" href="icon.png" type="png">
+  <link rel="icon" href="icon.png" type="png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Expense Tracker</title>
   <style>
     /* CSS Variables for consistent theming */
     :root {
-      --primary: #4361ee;
+      --primary: #78290f;
       --primary-light: #4895ef;
-      --secondary: #3f37c9;
+      --secondary: #ee9b00;
       --success: #4cc9f0;
       --danger: #f72585;
       --warning: #f8961e;
@@ -31,18 +31,216 @@
     }
 
     body {
-      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      font-family: "Poppins", sans-serif;
       color: var(--dark);
-      background-color: #f5f7fb;
       line-height: 1.6;
       min-height: 100vh;
     }
 
-    /* Typography */
+    /* Nature Background Elements - Only for auth pages */
+    .nature-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .nature-background .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .nature-background .trees {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .nature-background .girl {
+      position: absolute;
+      scale: 0.65;
+      pointer-events: none;
+      animation: animateGirl 10s linear infinite;
+      z-index: 100;
+    }
+
+    @keyframes animateGirl {
+      0% {
+        transform: translateX(calc(100% + 100vw));
+      }
+      50% {
+        transform: translateX(calc(-100% - 100vw));
+      }
+      50.01% {
+        transform: translateX(calc(-100% - 100vw)) rotateY(180deg);
+      }
+      100% {
+        transform: translateX(calc(100% + 100vw)) rotateY(180deg);
+      }
+    }
+
+    .nature-background .leaves {
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .nature-background .leaves .set {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .nature-background .leaves .set div {
+      position: absolute;
+      display: block;
+    }
+
+    .nature-background .leaves .set div:nth-child(1) {
+      left: 20%;
+      animation: animate 20s linear infinite;
+    }
+
+    .nature-background .leaves .set div:nth-child(2) {
+      left: 50%;
+      animation: animate 14s linear infinite;
+    }
+
+    .nature-background .leaves .set div:nth-child(3) {
+      left: 70%;
+      animation: animate 12s linear infinite;
+    }
+
+    .nature-background .leaves .set div:nth-child(4) {
+      left: 5%;
+      animation: animate 15s linear infinite;
+    }
+
+    .nature-background .leaves .set div:nth-child(5) {
+      left: 85%;
+      animation: animate 18s linear infinite;
+    }
+
+    .nature-background .leaves .set div:nth-child(6) {
+      left: 90%;
+      animation: animate 12s linear infinite;
+    }
+
+    .nature-background .leaves .set div:nth-child(7) {
+      left: 15%;
+      animation: animate 14s linear infinite;
+    }
+
+    .nature-background .leaves .set div:nth-child(8) {
+      left: 60%;
+      animation: animate 15s linear infinite;
+    }
+
+    @keyframes animate {
+      0% {
+        opacity: 0;
+        top: -10%;
+        transform: translateX(20px) rotate(0deg);
+      }
+      10% {
+        opacity: 1;
+      }
+      20% {
+        transform: translateX(-20px) rotate(45deg);
+      }
+      40% {
+        transform: translateX(-20px) rotate(90deg);
+      }
+      60% {
+        transform: translateX(20px) rotate(180deg);
+      }
+      80% {
+        transform: translateX(-20px) rotate(45deg);
+      }
+      100% {
+        top: 110%;
+        transform: translateX(20px) rotate(225deg);
+      }
+    }
+
+    /* Green Leaves Background for other pages - More prominent */
+    .green-leaves-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image: url('lbg.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      opacity: 0.4; /* Increased opacity to highlight the background more */
+    }
+
+    /* Content overlay for better readability */
+    .content-overlay {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Glassmorphism Card - Only for auth pages */
+    .glass-card {
+      position: relative;
+      padding: 60px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(15px);
+      border: 1px solid #951c1c;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      border-right: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    /* Regular card for other pages - Less white, more transparent */
+    .card {
+      background: rgba(255, 255, 255, 0.85); /* Reduced opacity to show more background */
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(8px); /* Increased blur for better effect */
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    /* Typography - Enhanced for better visibility */
     h1, h2, h3, h4, h5, h6 {
       margin-bottom: 0.5rem;
-      font-weight: 600;
+      font-weight: 700; /* Bolder for better visibility */
       line-height: 1.2;
+      color: #1a1a1a; /* Darker for better contrast */
     }
 
     h1 {
@@ -59,12 +257,14 @@
 
     p {
       margin-bottom: 1rem;
+      color: #333; /* Darker for better readability */
     }
 
     a {
       color: var(--primary);
       text-decoration: none;
       transition: var(--transition);
+      font-weight: 600; /* Bolder links */
     }
 
     a:hover {
@@ -79,17 +279,9 @@
       padding: 0 15px;
     }
 
-    .card {
-      background: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
     .btn {
       display: inline-block;
-      font-weight: 500;
+      font-weight: 600; /* Bolder button text */
       text-align: center;
       white-space: nowrap;
       vertical-align: middle;
@@ -130,15 +322,40 @@
       font-size: 0.875rem;
     }
 
-    /* Navigation */
+    /* Navigation - More transparent to show background */
     .navbar {
-      background-color: white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      
+      
+      box-shadow: 0 2px 4px rgba(12, 1, 1, 0.1);
       padding: 1rem 0;
       position: sticky;
       top: 0;
       z-index: 100;
+      /* border-bottom: 1px solid rgba(255, 255, 255, 0.6); */
     }
+   
+    .navbar-brand span{
+  font-weight:bold;
+  font-size:28px; 
+  alignment-baseline: middle;
+  color:#fff;
+  animation: sparkle 1.5s infinite alternate;
+  text-shadow:
+     0 0 5px #fff,
+     0 0 10px #fff,
+     0 0 20px #fff,
+     0 0 40px #bcd81d,
+     0 0 80px #720026;
+}
+
+@keyframes sparkle{
+  0%{text-shadow:0 0 5px #fff;}
+  100%{text-shadow:
+      0 0 10px #fff,
+      0 0 20px #fff,
+      0 0 30px #fcbf49,
+      0 0 60px #e36414;}
+}
 
     .navbar-container {
       display: flex;
@@ -162,8 +379,8 @@
     }
 
     .navbar-nav a {
-      color: var(--dark);
-      font-weight: 500;
+      color: #1a1a1a; /* Darker for better contrast */
+      font-weight: 600; /* Bolder */
     }
 
     .navbar-nav a:hover {
@@ -174,7 +391,7 @@
       color: var(--danger);
     }
 
-    /* Forms */
+    /* Forms - Enhanced for visibility */
     .form-group {
       margin-bottom: 1rem;
     }
@@ -182,7 +399,8 @@
     label {
       display: block;
       margin-bottom: 0.5rem;
-      font-weight: 500;
+      font-weight: 600; /* Bolder labels */
+      color: #1a1a1a; /* Darker for better contrast */
     }
 
     input, select {
@@ -192,12 +410,14 @@
       border-radius: var(--border-radius);
       font-size: 1rem;
       transition: var(--transition);
+      background: rgba(255, 255, 255, 0.9); /* Slightly transparent */
     }
 
     input:focus, select:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
+      background: white; /* Solid white on focus */
     }
 
     /* Auth Pages */
@@ -206,7 +426,6 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #f5f7fb 0%, #e4edf5 100%);
     }
 
     .auth-card {
@@ -234,28 +453,32 @@
 
     .summary-card .value {
       font-size: 2rem;
-      font-weight: 700;
+      font-weight: 800; /* Bolder values */
       margin: 0.5rem 0;
+      color: #1a1a1a; /* Darker for better contrast */
     }
 
     .summary-card.primary {
-      background-color: rgba(67, 97, 238, 0.1);
+      background-color: rgba(67, 97, 238, 0.15);
       border-left: 4px solid var(--primary);
     }
 
     .summary-card.success {
-      background-color: rgba(76, 201, 240, 0.1);
+      background-color: rgba(76, 201, 240, 0.15);
       border-left: 4px solid var(--success);
     }
 
     .summary-card.danger {
-      background-color: rgba(247, 37, 133, 0.1);
+      background-color: rgba(247, 37, 133, 0.15);
       border-left: 4px solid var(--danger);
     }
 
-    /* Tables */
+    /* Tables - Enhanced for visibility */
     .table-responsive {
       overflow-x: auto;
+      background: rgba(255, 255, 255, 0.8); /* More transparent */
+      border-radius: var(--border-radius);
+      padding: 0.5rem;
     }
 
     .table {
@@ -270,8 +493,14 @@
     }
 
     .table th {
-      background-color: rgba(0, 0, 0, 0.02);
-      font-weight: 600;
+      background-color: rgba(0, 0, 0, 0.05);
+      font-weight: 700; /* Bolder headers */
+      color: #1a1a1a; /* Darker for better contrast */
+    }
+
+    .table td {
+      font-weight: 500; /* Medium weight for better readability */
+      color: #333; /* Darker text */
     }
 
     /* Cards for mobile view */
@@ -284,6 +513,7 @@
       border: 1px solid var(--gray-light);
       border-radius: var(--border-radius);
       margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.85); /* More transparent */
     }
 
     .entry-card .row {
@@ -294,8 +524,9 @@
     }
 
     .entry-card .amount {
-      font-weight: 700;
+      font-weight: 800; /* Bolder amounts */
       font-size: 1.25rem;
+      color: #1a1a1a; /* Darker for better contrast */
     }
 
     .card-actions {
@@ -309,23 +540,25 @@
       padding: 0.75rem;
       border-radius: var(--border-radius);
       margin-top: 1rem;
+      font-weight: 500; /* Medium weight for better readability */
     }
 
     .message.success {
-      background-color: rgba(76, 201, 240, 0.1);
+      background-color: rgba(76, 201, 240, 0.2);
       color: #0c5460;
       border: 1px solid #bee5eb;
     }
 
     .message.error {
-      background-color: rgba(247, 37, 133, 0.1);
+      background-color: rgba(247, 37, 133, 0.2);
       color: #721c24;
       border: 1px solid #f5c6cb;
     }
 
     /* Utilities */
     .text-muted {
-      color: var(--gray);
+      color: #555; /* Darker muted text */
+      font-weight: 500; /* Medium weight */
     }
 
     .text-center {
@@ -363,14 +596,42 @@
       .summary-grid {
         grid-template-columns: 1fr;
       }
+
+      .glass-card {
+        width: 90%;
+        padding: 40px 30px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Nature Background - Only for auth pages -->
+  <div id="nature-background" class="nature-background d-none">
+    <div class="leaves">
+      <div class="set">
+        <div><img src="leaf_01.png" /></div>
+        <div><img src="leaf_02.png" /></div>
+        <div><img src="leaf_03.png" /></div>
+        <div><img src="leaf_04.png" /></div>
+        <div><img src="leaf_01.png" /></div>
+        <div><img src="leaf_02.png" /></div>
+        <div><img src="leaf_03.png" /></div>
+        <div><img src="leaf_04.png" /></div>
+      </div>
+    </div>
+    <img src="bg.jpg" class="bg" />
+    <img src="girl.png" class="girl" />
+    <img src="trees.png" class="trees" />
+  </div>
+
+  <!-- Green Leaves Background for other pages -->
+  <div id="green-leaves-bg" class="green-leaves-bg d-none"></div>
+
   <!-- Navigation -->
   <nav class="navbar">
     <div class="container navbar-container">
-      <div class="navbar-brand">Expense Tracker</div>
+     <div class="navbar-brand"><span style="color:#4f000b;">Expense Tracker</span></div>
+
       <ul class="navbar-nav">
         <li><a href="#" id="dashboard-link">Dashboard</a></li>
         <li><a href="#" id="add-expense-link">Add Expense</a></li>
@@ -382,7 +643,7 @@
   </nav>
 
   <!-- Main Content Area -->
-  <main class="container" id="main-content">
+  <main class="container content-overlay" id="main-content">
     <!-- Dashboard View -->
     <section id="dashboard-view" class="d-none">
       <div class="welcome-section card">
@@ -528,7 +789,7 @@
 
     <!-- Login View -->
     <section id="login-view" class="auth-container">
-      <div class="card auth-card">
+      <div class="glass-card">
         <h2 class="text-center">Login</h2>
         <form id="login-form">
           <div class="form-group">
@@ -553,7 +814,7 @@
 
     <!-- Register View -->
     <section id="register-view" class="auth-container d-none">
-      <div class="card auth-card">
+      <div class="glass-card">
         <h2 class="text-center">Register</h2>
         <form id="register-form">
           <div class="form-group">
@@ -625,6 +886,10 @@
       'login': document.getElementById('login-link')
     };
 
+    // Background elements
+    const natureBackground = document.getElementById('nature-background');
+    const greenLeavesBg = document.getElementById('green-leaves-bg');
+
     // Initialize the application
     function initApp() {
       // Check if user is logged in
@@ -669,6 +934,17 @@
         document.getElementById('user-name').textContent = currentUser.name || currentUser.phone;
       } else {
         navItems.forEach(item => item.style.display = 'none');
+      }
+      
+      // Show/hide backgrounds based on current view
+      if (viewName === 'login' || viewName === 'register') {
+        natureBackground.classList.remove('d-none');
+        greenLeavesBg.classList.add('d-none');
+        document.body.style.backgroundColor = '#ffb703';
+      } else {
+        natureBackground.classList.add('d-none');
+        greenLeavesBg.classList.remove('d-none');
+        document.body.style.backgroundColor = '#f0f8f0'; // Light green background fallback
       }
     }
 
